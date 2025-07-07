@@ -14,7 +14,7 @@ header-includes:
   - \usepackage{booktabs}
 ---
 
-# Simulations of Trust Game
+# Simulations of Trust over Risk Game with LLM Interventions
 
 This document presents a simulation study of a repeated trust game, designed to evaluate the effects of different treatments—LLM-delegation, LLM-advice, and control—on principal trust, agent risk-taking, and punishment behavior. The simulation models a scenario where, in each round, a principal decides whether to trust an agent, and the agent then chooses between a safe action ("keep") and a risky action ("Gamble A"). The probabilities of these actions, as well as the expected punishment, are parameterized by treatment.
 This document concerns only the main hypotheses without the mediators, check the rmd file to see the code and the simulation setup.
