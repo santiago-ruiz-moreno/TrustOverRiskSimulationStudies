@@ -108,7 +108,7 @@
 
 \title{Simulations of Trust Game}
 \author{Your Name}
-\date{2025-06-16}
+\date{2025-07-07}
 
 \begin{document}
 \maketitle
@@ -156,20 +156,42 @@ hypothesis:
 \FunctionTok{source}\NormalTok{(}\StringTok{"si.test.R"}\NormalTok{)}
 
 \NormalTok{berg\_1995 }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
-    \AttributeTok{treatment =} \FunctionTok{c}\NormalTok{(}
-        \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{32}\NormalTok{),  }\CommentTok{\# No History}
-        \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{28}\NormalTok{)   }\CommentTok{\# Social History}
-\NormalTok{    ),}
-    \AttributeTok{sent =} \FunctionTok{c}\NormalTok{(}
-        \DecValTok{7}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{7}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{7}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{,}
-        \DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{7}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}
-\NormalTok{    ),}
-    \AttributeTok{sent\_back =} \FunctionTok{c}\NormalTok{(}
-        \DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{11}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{7}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{,}
-        \DecValTok{11}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{16}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{14}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{0}
-\NormalTok{    )}
+  \AttributeTok{treatment =} \FunctionTok{c}\NormalTok{(}
+    \FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{32}\NormalTok{),  }\CommentTok{\# No History}
+    \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{28}\NormalTok{)   }\CommentTok{\# Social History}
+\NormalTok{  ),}
+  \AttributeTok{sent =} \FunctionTok{c}\NormalTok{(}
+    \DecValTok{7}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{7}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{7}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+    \DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{7}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}
+\NormalTok{  ),}
+  \AttributeTok{sent\_back =} \FunctionTok{c}\NormalTok{(}
+    \DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{11}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{7}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{12}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{1}\NormalTok{,}
+    \DecValTok{11}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{16}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{14}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{8}\NormalTok{, }\DecValTok{0}
+\NormalTok{  )}
 \NormalTok{)}
 
+\CommentTok{\# Compute mean and standard deviation by treatment and print}
+\FunctionTok{library}\NormalTok{(dplyr)}
+\NormalTok{berg\_1995 }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(treatment) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarise}\NormalTok{(}
+  \AttributeTok{mean\_sent =} \FunctionTok{mean}\NormalTok{(sent),}
+  \AttributeTok{sd\_sent =} \FunctionTok{sd}\NormalTok{(sent)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{print}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 3
+##   treatment mean_sent sd_sent
+##       <dbl>     <dbl>   <dbl>
+## 1         0      5.16    2.94
+## 2         1      5.36    3.53
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{palette }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"\#1b9e77"}\NormalTok{, }\StringTok{"\#d95f02"}\NormalTok{)}
 
 \FunctionTok{ggplot}\NormalTok{(}
@@ -493,7 +515,7 @@ hypothesis.
 ##  Exact Wilcoxon rank sum test
 ## 
 ## data:  sent by treatment
-## W = 533.5, p-value = 0.7744
+## W = 466, p-value = 0.5352
 ## alternative hypothesis: true mu is not equal to 0
 \end{verbatim}
 
@@ -508,13 +530,13 @@ hypothesis.
 ##  Welch Two Sample t-test
 ## 
 ## data:  sent by treatment
-## t = 0.13826, df = 60.134, p-value = 0.8905
+## t = -0.94196, df = 61.986, p-value = 0.3499
 ## alternative hypothesis: true difference in means between group 0 and group 2 is not equal to 0
 ## 95 percent confidence interval:
-##  -1.262519  1.450019
+##  -2.1464808  0.7714808
 ## sample estimates:
 ## mean in group 0 mean in group 2 
-##         5.15625         5.06250
+##         5.15625         5.84375
 \end{verbatim}
 
 \begin{Shaded}
@@ -1057,33 +1079,33 @@ effect is of 0.5/
 \toprule
 n & t\_test\_power & wilcox\_power\\
 \midrule
-10 & 0.772 & 0.742\\
-15 & 0.877 & 0.857\\
-20 & 0.937 & 0.927\\
-25 & 0.966 & 0.964\\
-30 & 0.989 & 0.977\\
+10 & 0.495 & 0.474\\
+15 & 0.576 & 0.545\\
+20 & 0.682 & 0.653\\
+25 & 0.760 & 0.732\\
+30 & 0.813 & 0.794\\
 \addlinespace
-35 & 0.995 & 0.992\\
-40 & 0.996 & 0.993\\
-45 & 1.000 & 0.999\\
-50 & 1.000 & 0.999\\
-55 & 1.000 & 1.000\\
+35 & 0.848 & 0.833\\
+40 & 0.888 & 0.878\\
+45 & 0.923 & 0.905\\
+50 & 0.944 & 0.940\\
+55 & 0.954 & 0.946\\
 \addlinespace
-60 & 1.000 & 1.000\\
-65 & 1.000 & 1.000\\
-70 & 1.000 & 1.000\\
-75 & 1.000 & 1.000\\
-80 & 1.000 & 1.000\\
+60 & 0.968 & 0.964\\
+65 & 0.983 & 0.982\\
+70 & 0.973 & 0.970\\
+75 & 0.983 & 0.978\\
+80 & 0.993 & 0.983\\
 \addlinespace
-85 & 1.000 & 1.000\\
-90 & 1.000 & 1.000\\
-95 & 1.000 & 1.000\\
-100 & 1.000 & 1.000\\
-105 & 1.000 & 1.000\\
+85 & 0.992 & 0.991\\
+90 & 0.992 & 0.988\\
+95 & 0.996 & 0.994\\
+100 & 0.997 & 0.998\\
+105 & 0.998 & 0.999\\
 \addlinespace
-110 & 1.000 & 1.000\\
-115 & 1.000 & 1.000\\
-120 & 1.000 & 1.000\\
+110 & 1.000 & 0.998\\
+115 & 0.997 & 0.996\\
+120 & 0.998 & 0.995\\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -1203,5 +1225,119 @@ n & t\_test\_power & wilcox\_power\\
 ## 3 Wilcoxon Exact (llm_account=0) 0.597
 ## 4 Wilcoxon Exact (llm_account=1) 0.826
 \end{verbatim}
+
+\section{Simulating Punishment
+Decisions}\label{simulating-punishment-decisions}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# SIMULATION 7: Punishment Decisions {-} Treatment vs Control}
+
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{) }\CommentTok{\# for reproducibility}
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{100}
+\NormalTok{reps }\OtherTok{\textless{}{-}} \DecValTok{1000}
+\NormalTok{mean\_treatment }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{mean\_control }\OtherTok{\textless{}{-}} \FloatTok{1.5}
+\NormalTok{sd\_punishment }\OtherTok{\textless{}{-}} \FloatTok{0.5}
+
+\CommentTok{\# File paths for cached results}
+\NormalTok{reg\_pvalues\_file }\OtherTok{\textless{}{-}} \StringTok{"reg\_pvalues\_sim7.rds"}
+\NormalTok{wilcox\_pvalues\_file }\OtherTok{\textless{}{-}} \StringTok{"wilcox\_pvalues\_sim7.rds"}
+\NormalTok{last\_sim\_data\_file }\OtherTok{\textless{}{-}} \StringTok{"last\_sim\_data\_sim7.rds"}
+
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{file.exists}\NormalTok{(reg\_pvalues\_file) }\SpecialCharTok{\&\&} \FunctionTok{file.exists}\NormalTok{(wilcox\_pvalues\_file) }\SpecialCharTok{\&\&} \FunctionTok{file.exists}\NormalTok{(last\_sim\_data\_file)) \{}
+\NormalTok{  reg\_pvalues }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(reg\_pvalues\_file)}
+\NormalTok{  wilcox\_pvalues }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(wilcox\_pvalues\_file)}
+\NormalTok{  last\_sim\_data }\OtherTok{\textless{}{-}} \FunctionTok{readRDS}\NormalTok{(last\_sim\_data\_file)}
+\NormalTok{\} }\ControlFlowTok{else}\NormalTok{ \{}
+\NormalTok{  reg\_pvalues }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(reps)}
+\NormalTok{  wilcox\_pvalues }\OtherTok{\textless{}{-}} \FunctionTok{numeric}\NormalTok{(reps)}
+\NormalTok{  last\_sim\_data }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+
+\NormalTok{  pb }\OtherTok{\textless{}{-}}\NormalTok{ progress\_bar}\SpecialCharTok{$}\FunctionTok{new}\NormalTok{(}
+    \AttributeTok{format =} \StringTok{"  Simulating [:bar] :percent eta: :eta"}\NormalTok{,}
+    \AttributeTok{total =}\NormalTok{ reps, }\AttributeTok{clear =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{width =} \DecValTok{60}
+\NormalTok{  )}
+
+  \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{reps) \{}
+\NormalTok{    punishment\_treatment }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(n, }\AttributeTok{mean =}\NormalTok{ mean\_treatment, }\AttributeTok{sd =}\NormalTok{ sd\_punishment)}
+\NormalTok{    punishment\_control }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(n, }\AttributeTok{mean =}\NormalTok{ mean\_control, }\AttributeTok{sd =}\NormalTok{ sd\_punishment)}
+\NormalTok{    group }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\StringTok{"treatment"}\NormalTok{, }\StringTok{"control"}\NormalTok{), }\AttributeTok{each =}\NormalTok{ n), }\AttributeTok{levels =} \FunctionTok{c}\NormalTok{(}\StringTok{"control"}\NormalTok{, }\StringTok{"treatment"}\NormalTok{))}
+\NormalTok{    punishment }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(punishment\_treatment, punishment\_control)}
+\NormalTok{    sim\_data }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}
+      \AttributeTok{group =}\NormalTok{ group,}
+      \AttributeTok{punishment =}\NormalTok{ punishment}
+\NormalTok{    )}
+
+    \CommentTok{\# Linear regression: punishment \textasciitilde{} group}
+\NormalTok{    fit }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(punishment }\SpecialCharTok{\textasciitilde{}}\NormalTok{ group, }\AttributeTok{data =}\NormalTok{ sim\_data)}
+\NormalTok{    reg\_summary }\OtherTok{\textless{}{-}} \FunctionTok{summary}\NormalTok{(fit)}\SpecialCharTok{$}\NormalTok{coefficients}
+\NormalTok{    reg\_pvalues[i] }\OtherTok{\textless{}{-}} \ControlFlowTok{if}\NormalTok{ (}\StringTok{"grouptreatment"} \SpecialCharTok{\%in\%} \FunctionTok{rownames}\NormalTok{(reg\_summary)) reg\_summary[}\StringTok{"grouptreatment"}\NormalTok{, }\StringTok{"Pr(\textgreater{}|t|)"}\NormalTok{] }\ControlFlowTok{else} \ConstantTok{NA}
+
+    \CommentTok{\# Wilcoxon exact test}
+\NormalTok{    wilcox\_res }\OtherTok{\textless{}{-}} \FunctionTok{wilcox.exact}\NormalTok{(punishment }\SpecialCharTok{\textasciitilde{}}\NormalTok{ group, }\AttributeTok{data =}\NormalTok{ sim\_data)}
+\NormalTok{    wilcox\_pvalues[i] }\OtherTok{\textless{}{-}}\NormalTok{ wilcox\_res}\SpecialCharTok{$}\NormalTok{p.value}
+
+    \CommentTok{\# Store the last simulation data for plotting}
+    \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{==}\NormalTok{ reps) last\_sim\_data }\OtherTok{\textless{}{-}}\NormalTok{ sim\_data}
+
+\NormalTok{    pb}\SpecialCharTok{$}\FunctionTok{tick}\NormalTok{()}
+\NormalTok{  \}}
+
+  \FunctionTok{saveRDS}\NormalTok{(reg\_pvalues, reg\_pvalues\_file)}
+  \FunctionTok{saveRDS}\NormalTok{(wilcox\_pvalues, wilcox\_pvalues\_file)}
+  \FunctionTok{saveRDS}\NormalTok{(last\_sim\_data, last\_sim\_data\_file)}
+\NormalTok{\}}
+
+\CommentTok{\# Print summary of p{-}values}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Proportion of significant results (p \textless{} 0.05):}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Proportion of significant results (p < 0.05):
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Linear regression:"}\NormalTok{, }\FunctionTok{mean}\NormalTok{(reg\_pvalues }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Linear regression: 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{cat}\NormalTok{(}\StringTok{"Wilcoxon exact:"}\NormalTok{, }\FunctionTok{mean}\NormalTok{(wilcox\_pvalues }\SpecialCharTok{\textless{}} \FloatTok{0.05}\NormalTok{, }\AttributeTok{na.rm =} \ConstantTok{TRUE}\NormalTok{), }\StringTok{"}\SpecialCharTok{\textbackslash{}n}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Wilcoxon exact: 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Plot kernel density of punishment for last simulation}
+\FunctionTok{library}\NormalTok{(ggplot2)}
+\FunctionTok{ggplot}\NormalTok{(last\_sim\_data, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ punishment, }\AttributeTok{fill =}\NormalTok{ group, }\AttributeTok{color =}\NormalTok{ group)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_density}\NormalTok{(}\AttributeTok{alpha =} \FloatTok{0.4}\NormalTok{, }\AttributeTok{size =} \DecValTok{1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"control"} \OtherTok{=} \StringTok{"\#1b9e77"}\NormalTok{, }\StringTok{"treatment"} \OtherTok{=} \StringTok{"\#d95f02"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_manual}\NormalTok{(}\AttributeTok{values =} \FunctionTok{c}\NormalTok{(}\StringTok{"control"} \OtherTok{=} \StringTok{"\#1b9e77"}\NormalTok{, }\StringTok{"treatment"} \OtherTok{=} \StringTok{"\#d95f02"}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}
+    \AttributeTok{title =} \StringTok{"Kernel Density of Punishment: Control vs. Treatment (Last Simulation)"}\NormalTok{,}
+    \AttributeTok{x =} \StringTok{"Punishment"}\NormalTok{,}
+    \AttributeTok{y =} \StringTok{"Density"}\NormalTok{,}
+    \AttributeTok{fill =} \StringTok{"Group"}\NormalTok{,}
+    \AttributeTok{color =} \StringTok{"Group"}
+\NormalTok{  ) }\SpecialCharTok{+}
+  \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{14}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{panel.grid =} \FunctionTok{element\_blank}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{TrustOverRiskSimualtions_files/figure-latex/7-1.pdf}}
 
 \end{document}

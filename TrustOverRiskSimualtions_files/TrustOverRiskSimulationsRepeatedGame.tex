@@ -1,0 +1,234 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Simulations of Trust Game},
+  pdfauthor={J. Santiago Ruiz M},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Simulations of Trust Game}
+\author{J. Santiago Ruiz M}
+\date{2025-07-07}
+
+\begin{document}
+\maketitle
+
+\section{Simulations of Trust Game}\label{simulations-of-trust-game}
+
+This document presents a simulation study of a repeated trust game,
+designed to evaluate the effects of different
+treatments---LLM-delegation, LLM-advice, and control---on principal
+trust, agent risk-taking, and punishment behavior. The simulation models
+a scenario where, in each round, a principal decides whether to trust an
+agent, and the agent then chooses between a safe action (``keep'') and a
+risky action (``Gamble A''). The probabilities of these actions, as well
+as the expected punishment, are parameterized by treatment.
+
+The simulation is based on several key assumptions regarding the
+distributions of actions and the expected effect sizes. For the
+principal's decision to trust, the probability is set to 0.8 in the
+LLM-delegation treatment, 0.6 in the LLM-advice treatment, and 0.5 in
+the control group. These probabilities are chosen to reflect anticipated
+increases in trust due to the LLM interventions, corresponding to
+moderate to large effect sizes (approximately 10\% increase for advice
+and 30\% for delegation compared to control). For the agent's choice,
+the probability of selecting the riskier ``Gamble A'' is set to 1.0 for
+LLM-delegation, 0.8 for LLM-advice, and 0.5 for
+
+\begin{itemize}
+\item
+  \textbf{Principal Trust}: The probability that a principal chooses to
+  trust the agent is modeled as a function of the agent's treatment.
+  Formally, the hypothesis is tested using a logistic mixed effects
+  model:
+
+  \[
+  \text{logit}(\Pr(\text{Trust}_{ij} = 1)) = \beta_0 + \beta_1 \cdot \text{LLM-delegation}_{ij} + \beta_2 \cdot \text{LLM-advice}_{ij} + u_j
+  \] where \(u_j\) is a random intercept for each principal.
+\item
+  \textbf{Agent Riskier Action}: The likelihood that the agent chooses
+  the riskier action (``Gamble A'') is also modeled as a function of
+  treatment, using a logistic mixed effects model:
+
+  \[
+  \text{logit}(\Pr(\text{GambleA}_{ij} = 1)) = \gamma_0 + \gamma_1 \cdot \text{LLM-delegation}_{ij} + \gamma_2 \cdot \text{LLM-advice}_{ij} + v_j
+  \] where \(v_j\) is a random intercept for each agent.
+\item
+  \textbf{Punishment}: The amount of punishment assigned by the
+  principal is modeled with a linear mixed effects model:
+
+  \[
+  \text{Punishment}_{ij} = \alpha_0 + \alpha_1 \cdot \text{LLM-delegation}_{ij} + \alpha_2 \cdot \text{LLM-advice}_{ij} + w_j + \epsilon_{ij}
+  \] where \(w_j\) is a random intercept for each agent and
+  \(\epsilon_{ij}\) is the residual error.
+\end{itemize}
+
+The simulation iterates over multiple sample sizes and repetitions to
+estimate the statistical power for detecting treatment effects in each
+model. The results are summarized in regression tables and power curves,
+providing guidance for experimental design and sample size planning.
+
+\begin{table}[!htbp] \centering 
+  \caption{Mixed Effects Regression Results} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{3}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-4} 
+\\[-1.8ex] & Principal Trust (logit) & Riskier Action by Agent (logit) & Punishment (linear) \\ 
+\\[-1.8ex] & \textit{linear} & \textit{generalized linear} & \textit{linear} \\ 
+ & \textit{mixed-effects} & \textit{mixed-effects} & \textit{mixed-effects} \\ 
+ & Principal Trust & Riskier Action & Punishment \\ 
+\hline \\[-1.8ex] 
+ LLM-delegation & 0.626 & 3.706$^{***}$ & $-$0.939$^{***}$ \\ 
+  & & & \\ 
+ LLM-advice & 0.630 & 1.517$^{***}$ & $-$0.878$^{***}$ \\ 
+  & & & \\ 
+ Constant & 5.235$^{***}$ & $-$0.272 & 0.819$^{***}$ \\ 
+  & & & \\ 
+\hline \\[-1.8ex] 
+Observations & 450 & 287 & 450 \\ 
+Log Likelihood & $-$1,112.699 & $-$113.579 & $-$889.234 \\ 
+Akaike Inf. Crit. & 2,235.399 & 235.157 & 1,788.467 \\ 
+Bayesian Inf. Crit. & 2,255.945 & 249.795 & 1,809.014 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{3}{r}{$^{*}$p$<$0.05; $^{**}$p$<$0.01; $^{***}$p$<$0.001} \\ 
+ & \multicolumn{3}{r}{Standard errors in parentheses. * p<0.05, ** p<0.01, *** p<0.001} \\ 
+\end{tabular} 
+\end{table}
+
+\section{Simulation Results}\label{simulation-results}
+
+\textbar{} \textbar{} \textbar{} 0\%Simulation cache already exists.
+Skipping simulation and using cached results.
+
+\begin{table}[!h]
+
+\caption{\label{tab:plot_power}Estimated Power for Hypothesis Tests of Treatment Effects: $\beta_1$, $\beta_2$ (Principal Trust); $\gamma_1$, $\gamma_2$ (Riskier Action); $\alpha_1$, $\alpha_2$ (Punishment)}
+\centering
+\fontsize{10}{12}\selectfont
+\begin{tabular}{llrr}
+\toprule
+Sample Size & Model & $\beta_1$, $\gamma_1$, $\alpha_1$ (LLM-delegation) & $\beta_2$, $\gamma_2$, $\alpha_2$ (LLM-advice)\\
+[1.5ex]
+\midrule
+90 & Principal Trust & 0.52 & 0.54\\
+[1.5ex]
+ & Punishment & 0.98 & 0.97\\
+[1.5ex]
+ & Riskier Action & 0.79 & 0.98\\
+[1.5ex]
+120 & Principal Trust & 0.64 & 0.64\\
+[1.5ex]
+ & Punishment & 1.00 & \vphantom{4} 1.00\\
+[1.5ex]
+\addlinespace
+ & Riskier Action & 0.92 & 0.98\\
+[1.5ex]
+150 & Principal Trust & 0.78 & 0.74\\
+[1.5ex]
+ & Punishment & 1.00 & \vphantom{3} 1.00\\
+[1.5ex]
+ & Riskier Action & 0.98 & \vphantom{1} 1.00\\
+[1.5ex]
+180 & Principal Trust & 0.81 & 0.82\\
+[1.5ex]
+\addlinespace
+ & Punishment & 1.00 & \vphantom{2} 1.00\\
+[1.5ex]
+ & Riskier Action & 0.98 & 1.00\\
+[1.5ex]
+210 & Principal Trust & 0.88 & 0.90\\
+[1.5ex]
+ & Punishment & 1.00 & \vphantom{1} 1.00\\
+[1.5ex]
+ & Riskier Action & 1.00 & \vphantom{1} 1.00\\
+[1.5ex]
+\addlinespace
+240 & Principal Trust & 0.94 & 0.96\\
+[1.5ex]
+ & Punishment & 1.00 & 1.00\\
+[1.5ex]
+ & Riskier Action & 1.00 & 1.00\\
+[1.5ex]
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

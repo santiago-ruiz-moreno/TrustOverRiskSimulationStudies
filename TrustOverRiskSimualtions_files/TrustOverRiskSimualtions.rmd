@@ -1,6 +1,6 @@
 ---
 title: "Simulations of Trust Game"
-author: "Your Name"
+author: "Santiago RUIZ"
 date: "`r Sys.Date()`"
 output:
   pdf_document:
@@ -45,19 +45,29 @@ library(dplyr)
 source("si.test.R")
 
 berg_1995 <- data.frame(
-    treatment = c(
-        rep(0, 32),  # No History
-        rep(1, 28)   # Social History
-    ),
-    sent = c(
-        7, 3, 7, 5, 3, 2, 6, 4, 10, 5, 5, 10, 5, 8, 5, 0, 7, 1, 3, 2, 6, 10, 3, 6, 6, 10, 10, 6, 4, 0, 5, 1,
-        5, 10, 2, 5, 0, 2, 10, 10, 5, 9, 3, 2, 10, 2, 5, 5, 8, 5, 0, 1, 10, 7, 10, 3, 10, 6, 5, 0
-    ),
-    sent_back = c(
-        1, 0, 6, 11, 1, 4, 0, 1, 20, 5, 7, 0, 0, 4, 15, 0, 1, 0, 5, 0, 12, 15, 6, 8, 1, 15, 1, 3, 1, 0, 5, 1,
-        11, 15, 2, 8, 0, 1, 16, 15, 5, 0, 0, 0, 5, 0, 0, 10, 3, 8, 0, 1, 20, 14, 15, 6, 10, 8, 8, 0
-    )
+  treatment = c(
+    rep(0, 32),  # No History
+    rep(1, 28)   # Social History
+  ),
+  sent = c(
+    7, 3, 7, 5, 3, 2, 6, 4, 10, 5, 5, 10, 5, 8, 5, 0, 7, 1, 3, 2, 6, 10, 3, 6, 6, 10, 10, 6, 4, 0, 5, 1,
+    5, 10, 2, 5, 0, 2, 10, 10, 5, 9, 3, 2, 10, 2, 5, 5, 8, 5, 0, 1, 10, 7, 10, 3, 10, 6, 5, 0
+  ),
+  sent_back = c(
+    1, 0, 6, 11, 1, 4, 0, 1, 20, 5, 7, 0, 0, 4, 15, 0, 1, 0, 5, 0, 12, 15, 6, 8, 1, 15, 1, 3, 1, 0, 5, 1,
+    11, 15, 2, 8, 0, 1, 16, 15, 5, 0, 0, 0, 5, 0, 0, 10, 3, 8, 0, 1, 20, 14, 15, 6, 10, 8, 8, 0
+  )
 )
+
+# Compute mean and standard deviation by treatment and print
+library(dplyr)
+berg_1995 %>%
+  group_by(treatment) %>%
+  summarise(
+  mean_sent = mean(sent),
+  sd_sent = sd(sent)
+  ) %>%
+  print()
 
 palette <- c("#1b9e77", "#d95f02")
 
@@ -850,6 +860,92 @@ print(power_results_int)
 
 ```
 
+# Simulating Punishment Decisions
 
+
+
+```{r 7, include=TRUE, echo=TRUE, warning=FALSE, message=FALSE}
+# SIMULATION 7: Punishment Decisions - Treatment vs Control
+
+set.seed(123) # for reproducibility
+n <- 100
+reps <- 1000
+mean_treatment <- 0
+mean_control <- 1.5
+sd_punishment <- 0.5
+
+# File paths for cached results
+reg_pvalues_file <- "reg_pvalues_sim7.rds"
+wilcox_pvalues_file <- "wilcox_pvalues_sim7.rds"
+last_sim_data_file <- "last_sim_data_sim7.rds"
+
+if (file.exists(reg_pvalues_file) && file.exists(wilcox_pvalues_file) && file.exists(last_sim_data_file)) {
+  reg_pvalues <- readRDS(reg_pvalues_file)
+  wilcox_pvalues <- readRDS(wilcox_pvalues_file)
+  last_sim_data <- readRDS(last_sim_data_file)
+} else {
+  reg_pvalues <- numeric(reps)
+  wilcox_pvalues <- numeric(reps)
+  last_sim_data <- NULL
+
+  pb <- progress_bar$new(
+    format = "  Simulating [:bar] :percent eta: :eta",
+    total = reps, clear = FALSE, width = 60
+  )
+
+  for (i in 1:reps) {
+    punishment_treatment <- rnorm(n, mean = mean_treatment, sd = sd_punishment)
+    punishment_control <- rnorm(n, mean = mean_control, sd = sd_punishment)
+    group <- factor(rep(c("treatment", "control"), each = n), levels = c("control", "treatment"))
+    punishment <- c(punishment_treatment, punishment_control)
+    sim_data <- data.frame(
+      group = group,
+      punishment = punishment
+    )
+
+    # Linear regression: punishment ~ group
+    fit <- lm(punishment ~ group, data = sim_data)
+    reg_summary <- summary(fit)$coefficients
+    reg_pvalues[i] <- if ("grouptreatment" %in% rownames(reg_summary)) reg_summary["grouptreatment", "Pr(>|t|)"] else NA
+
+    # Wilcoxon exact test
+    wilcox_res <- wilcox.exact(punishment ~ group, data = sim_data)
+    wilcox_pvalues[i] <- wilcox_res$p.value
+
+    # Store the last simulation data for plotting
+    if (i == reps) last_sim_data <- sim_data
+
+    pb$tick()
+  }
+
+  saveRDS(reg_pvalues, reg_pvalues_file)
+  saveRDS(wilcox_pvalues, wilcox_pvalues_file)
+  saveRDS(last_sim_data, last_sim_data_file)
+}
+
+# Print summary of p-values
+cat("Proportion of significant results (p < 0.05):\n")
+cat("Linear regression:", mean(reg_pvalues < 0.05, na.rm = TRUE), "\n")
+cat("Wilcoxon exact:", mean(wilcox_pvalues < 0.05, na.rm = TRUE), "\n")
+
+# Plot kernel density of punishment for last simulation
+library(ggplot2)
+ggplot(last_sim_data, aes(x = punishment, fill = group, color = group)) +
+  geom_density(alpha = 0.4, size = 1) +
+  scale_fill_manual(values = c("control" = "#1b9e77", "treatment" = "#d95f02")) +
+  scale_color_manual(values = c("control" = "#1b9e77", "treatment" = "#d95f02")) +
+  labs(
+    title = "Kernel Density of Punishment: Control vs. Treatment (Last Simulation)",
+    x = "Punishment",
+    y = "Density",
+    fill = "Group",
+    color = "Group"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(panel.grid = element_blank())
+
+
+
+```
 
 

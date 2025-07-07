@@ -1,0 +1,452 @@
+---
+title: "Simulations of Trust Game"
+author: "J. Santiago Ruiz M"
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    keep_tex: true
+    fig_caption: yes
+    latex_engine: xelatex
+  html_document:
+    keep_md: true
+    fig_caption: yes
+header-includes:
+  - \usepackage{booktabs}
+---
+
+# Simulations of Trust Game
+
+This document presents a simulation study of a repeated trust game, designed to evaluate the effects of different treatments—LLM-delegation, LLM-advice, and control—on principal trust, agent risk-taking, and punishment behavior. The simulation models a scenario where, in each round, a principal decides whether to trust an agent, and the agent then chooses between a safe action ("keep") and a risky action ("Gamble A"). The probabilities of these actions, as well as the expected punishment, are parameterized by treatment.
+
+The simulation is based on several key assumptions regarding the distributions of actions and the expected effect sizes. For the principal's decision to trust, the probability is set to 0.8 in the LLM-delegation treatment, 0.6 in the LLM-advice treatment, and 0.5 in the control group. These probabilities are chosen to reflect anticipated increases in trust due to the LLM interventions, corresponding to moderate to large effect sizes (approximately 10% increase for advice and 30% for delegation compared to control). For the agent's choice, the probability of selecting the riskier "Gamble A" is set to 1.0 for LLM-delegation, 0.8 for LLM-advice, and 0.5 for
+
+- **Principal Trust**: The probability that a principal chooses to trust the agent is modeled as a function of the agent's treatment. Formally, the hypothesis is tested using a logistic mixed effects model:
+  
+  $$
+  \text{logit}(\Pr(\text{Trust}_{ij} = 1)) = \beta_0 + \beta_1 \cdot \text{LLM-delegation}_{ij} + \beta_2 \cdot \text{LLM-advice}_{ij} + u_j
+  $$
+  where $u_j$ is a random intercept for each principal.
+
+- **Agent Riskier Action**: The likelihood that the agent chooses the riskier action ("Gamble A") is also modeled as a function of treatment, using a logistic mixed effects model:
+  
+  $$
+  \text{logit}(\Pr(\text{GambleA}_{ij} = 1)) = \gamma_0 + \gamma_1 \cdot \text{LLM-delegation}_{ij} + \gamma_2 \cdot \text{LLM-advice}_{ij} + v_j
+  $$
+  where $v_j$ is a random intercept for each agent.
+
+- **Punishment**: The amount of punishment assigned by the principal is modeled with a linear mixed effects model:
+  
+  $$
+  \text{Punishment}_{ij} = \alpha_0 + \alpha_1 \cdot \text{LLM-delegation}_{ij} + \alpha_2 \cdot \text{LLM-advice}_{ij} + w_j + \epsilon_{ij}
+  $$
+  where $w_j$ is a random intercept for each agent and $\epsilon_{ij}$ is the residual error.
+
+The simulation iterates over multiple sample sizes and repetitions to estimate the statistical power for detecting treatment effects in each model. The results are summarized in regression tables and power curves, providing guidance for experimental design and sample size planning.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(ggplot2)
+library(reshape2)
+library(dplyr)
+
+set.seed(123) # for reproducibility
+repetitions <- 1000 # Number of repetitions for the simulation
+number_of_groups = 150
+rounds = 3
+players_per_group = 2
+total_players = number_of_groups*2
+treatments <- c("LLM-delegation", "LLM-advice", "control")
+# Define probabilities and payoffs for the gambles
+gamble_probs <- list(
+    "Gamble A" = c(0.95, 0.05),
+    "Gamble B" = c(0.95, 0.05)
+)
+gamble_payoffs <- list(
+    "Gamble A" = c(26, -1),
+    "Gamble B" = c(21, 23)
+)
+
+
+# Define the least worth identifiable distribution assumptions for the agent's and principal's actions.
+# we wan't to identify changes in probabilities of trusting the agent, of about 10% for advice and 30% for delegation
+
+# In term's of cohen's
+trust_probs <- c(
+    "LLM-delegation" = 0.8,
+    "LLM-advice" = 0.6,
+    "control" = 0.5
+)
+
+# For the bernoulli gambles, we assume that the agent's action probabilities are as follows:
+# We know from previous experiments that the agent's are risk averse when confronted
+# with similar gamble settings. And we know that the LLM, will always choose the 
+# option that maximizes the expected value.
+
+gambleA_probs <- c(
+    "LLM-delegation" = 1,
+    "LLM-advice" = 0.8,
+    "control" = 0.5
+)
+
+# We plan to observe in terms of punishment, that it is less for the LLM-delegation and LLM-advice treatments, compared to the control treatment.
+# In terms of Cohen's d, we expect a difference of about 1.0 between the control and the LLM treatments.
+
+punishment_means <- c(
+    "LLM-delegation" = 0,
+    "LLM-advice" = 0,
+    "control" = 2
+)
+
+punishment_sds <- c(
+    "LLM-delegation" = 2,
+    "LLM-advice" = 2,
+    "control" = 2
+)
+
+# Function to simulate the trust game with parameterized action probabilities and punishment
+# All key behavioral probabilities and punishment parameters are passed as arguments per treatment
+
+simulate_trust_game <- function(
+    n, 
+    rounds, 
+    treatments,
+    trust_probs,         # named vector: probability principal trusts, per treatment
+    gambleA_probs,       # named vector: probability agent chooses Gamble A, per treatment
+    punishment_means,    # named vector: mean of punishment, per treatment
+    punishment_sds       # named vector: sd of punishment, per treatment
+) {
+    agents <- data.frame(
+        id = 1:n,
+        treatment = sample(rep(treatments, length.out = n))
+    )
+    principals <- data.frame(
+        id = 1:n
+    )
+
+    results <- data.frame(
+        group_id = character(),
+        principal_id = integer(),
+        agent_id = integer(),
+        round = integer(),
+        principal_action = character(),
+        agent_action = character(),
+        agent_treatment = character(),
+        principal_payoff = numeric(),
+        agent_payoff = numeric(),
+        punishment = numeric()
+    )
+
+    for (round in 1:rounds) {
+        available_agents <- agents
+        principal_ids <- sample(principals$id, n)
+        agent_ids <- rep(NA, n)
+        agent_treatments <- rep(NA, n)
+
+        for (i in seq_along(principal_ids)) {
+            pid <- principal_ids[i]
+            chosen_idx <- sample(seq_len(nrow(available_agents)), 1)
+            chosen_agent <- available_agents[chosen_idx, ]
+            agent_ids[i] <- chosen_agent$id
+            agent_treatments[i] <- chosen_agent$treatment
+            available_agents <- available_agents[available_agents$id != chosen_agent$id, ]
+        }
+
+        for (i in 1:n) {
+            principal_id <- principal_ids[i]
+            agent_id <- agent_ids[i]
+            treatment <- agent_treatments[i]
+            group_id <- paste0(principal_id, "-", agent_id)
+
+            # Principal action: trust or not, Bernoulli with treatment-specific prob
+            p_trust <- trust_probs[[treatment]]
+            principal_action <- ifelse(rbinom(1, 1, p_trust) == 1, "trust", "No trust")
+
+            principal_payoff <- NA
+            agent_payoff <- NA
+            punishment <- 0
+
+            if (principal_action == "No trust") {
+                agent_action <- NA
+                principal_payoff <- 10
+                agent_payoff <- 0
+                punishment <- 0
+            } else {
+                # Agent chooses action: Gamble A or not, Bernoulli with treatment-specific prob
+                p_gambleA <- gambleA_probs[[treatment]]
+                agent_action <- ifelse(rbinom(1, 1, p_gambleA) == 1, "Gamble A", "keep")
+
+                if (agent_action == "keep") {
+                    agent_payoff <- 10
+                    principal_payoff <- 0
+                } else if (agent_action == "Gamble A") {
+                    probs <- gamble_probs[["Gamble A"]]
+                    payoffs <- gamble_payoffs[["Gamble A"]]
+                    outcome <- sample(1:2, 1, prob = probs)
+                    agent_payoff <- payoffs[outcome]
+                    principal_payoff <- 30 - agent_payoff
+                }
+
+                # Punishment: normal distribution, treatment-specific mean/sd
+                punishment <- rnorm(1, mean = punishment_means[[treatment]], sd = punishment_sds[[treatment]])
+            }
+
+            results <- rbind(results, data.frame(
+                group_id = group_id,
+                principal_id = principal_id,
+                agent_id = agent_id,
+                round = round,
+                principal_action = principal_action,
+                agent_action = agent_action,
+                agent_treatment = treatment,
+                principal_payoff = principal_payoff,
+                agent_payoff = agent_payoff,
+                punishment = punishment
+            ))
+        }
+    }
+    return(results)
+}
+
+results <- simulate_trust_game(
+    n = number_of_groups,
+    rounds = rounds,
+    treatments = treatments,
+    trust_probs = trust_probs,
+    gambleA_probs = gambleA_probs,
+    punishment_means = punishment_means,
+    punishment_sds = punishment_sds
+)
+
+
+```
+
+
+
+```{r regression, echo=FALSE, results='asis'}
+library(lme4)
+library(broom.mixed)
+library(knitr)
+library(stargazer)
+
+# Runing regressions for main hypotheses
+
+# Hypothesis 1: Principals trust more participants who are either in the LLM-advice or in the LLM-delegation treatment
+# Mixed effects regression model with participant as random effect
+
+run_regressions <- function(results, treatments) {
+    # Convert to binary outcome
+    # Create a new binary variable 'trust'
+    results$trust <- ifelse(results$principal_action == "trust", 1, 0)
+
+    results$agent_treatment <- factor(
+        results$agent_treatment, levels = treatments
+    )
+    # Model 1: Set 'control' as the baseline for agent_treatment
+    results$agent_treatment <- relevel(results$agent_treatment, ref = "control")
+    model1 <- glmer(
+        trust ~ agent_treatment + (1 | principal_id),
+        data = results,
+        family = binomial
+    )
+
+    # Model 2: Agent riskier action
+    results$riskier_action <- ifelse(results$agent_action == "Gamble A", 1, 0)
+    model2 <- glmer(
+        riskier_action ~ agent_treatment + (1 | agent_id),
+        data = results,
+        family = binomial
+    )
+
+    # Model 3: Punishment (using lmer for linear mixed effects)
+    model3 <- lmer(
+        punishment ~ agent_treatment + (1 | agent_id),
+        data = results
+    )
+
+    list(model1 = model1, model2 = model2, model3 = model3)
+}
+
+regression_models <- run_regressions(results, treatments)
+model1 <- regression_models$model1
+model2 <- regression_models$model2
+model3 <- regression_models$model3
+
+# Output all models in one professional table using stargazer
+stargazer(
+  model1, model2, model3,
+  type = "latex",
+  title = "Mixed Effects Regression Results",
+  dep.var.labels = c("Principal Trust (logit)", "Riskier Action by Agent (logit)", "Punishment (linear)"),
+  covariate.labels = c("LLM-delegation", "LLM-advice"),
+  column.labels = c("Principal Trust", "Riskier Action", "Punishment"),
+  model.numbers = FALSE,
+  single.row = FALSE,
+  report = "vc*", # show coefficients and standard errors
+  digits = 3,
+  star.cutoffs = c(0.05, 0.01, 0.001),
+  notes = "Standard errors in parentheses. * p<0.05, ** p<0.01, *** p<0.001", header = FALSE
+)
+
+```
+
+# Simulation Results
+
+```{r results_summary, echo=FALSE, results='asis'}
+library(itertools)
+library(pbapply)
+
+# Helper to extract p-values from glmer model
+extract_pvals <- function(model) {
+    coefs <- summary(model)$coefficients
+    # For agent_treatmentLLM-delegation and agent_treatmentLLM-advice
+    if ("Pr(>|z|)" %in% colnames(coefs)) {
+        # For binomial models (glmer)
+        pvals <- coefs[grepl("agent_treatment", rownames(coefs)), "Pr(>|z|)", drop=FALSE]
+    } else if ("t value" %in% colnames(coefs)) {
+        # For gaussian models (lmer/glmer with gaussian)
+        tvals <- coefs[grepl("agent_treatment", rownames(coefs)), "t value", drop=FALSE]
+        # Approximate p-values using normal distribution
+        pvals <- 2 * (1 - pnorm(abs(tvals)))
+    } else {
+        stop("No p-value or t value column found in model coefficients.")
+    }
+    return(as.numeric(pvals))
+}
+# Main simulation loop (store only p-values, no power calculation)
+set.seed(123)
+sample_sizes <- seq(90, 240, by = 30)
+repts_per_sample_size <- 200
+
+# Progress bar
+total_iters <- length(sample_sizes) * repts_per_sample_size
+pb <- txtProgressBar(min = 0, max = total_iters, style = 3)
+iter_count <- 0
+# Check if cache exists
+if (file.exists("simulation_pval_cache.rds")) {
+    cat("Simulation cache already exists. Skipping simulation and using cached results.\n")
+} else {
+    # Store results
+    pval_cache <- list()
+
+    for (n_groups in sample_sizes) {
+        pvals_model1 <- matrix(NA, nrow = repts_per_sample_size, ncol = 2) # delegation, advice
+        pvals_model2 <- matrix(NA, nrow = repts_per_sample_size, ncol = 2)
+        pvals_model3 <- matrix(NA, nrow = repts_per_sample_size, ncol = 2)
+        
+        for (rep in 1:repts_per_sample_size) {
+            sim_data <- simulate_trust_game(
+                n = n_groups,
+                rounds = rounds,
+                treatments = treatments,
+                trust_probs = trust_probs,
+                gambleA_probs = gambleA_probs,
+                punishment_means = punishment_means,
+                punishment_sds = punishment_sds
+            )
+            models <- run_regressions(sim_data, treatments)
+            # Model 1: trust
+            pvals_model1[rep, ] <- extract_pvals(models$model1)
+            # Model 2: riskier action
+            pvals_model2[rep, ] <- extract_pvals(models$model2)
+            # Model 3: punishment
+            pvals_model3[rep, ] <- extract_pvals(models$model3)
+            iter_count <- iter_count + 1
+            setTxtProgressBar(pb, iter_count)
+        }
+        pval_cache[[as.character(n_groups)]] <- list(
+            model1 = pvals_model1,
+            model2 = pvals_model2,
+            model3 = pvals_model3
+        )
+    }
+    close(pb)
+
+    # Save cache for later use
+    saveRDS(pval_cache, file = "simulation_pval_cache.rds")
+}
+
+
+```
+
+```{r plot_power, echo=FALSE, fig.cap="Estimated Power by Sample Size and Model"}
+
+
+pval_cache <- readRDS("simulation_pval_cache.rds")
+
+# Prepare data for plotting
+power_df <- data.frame()
+for (n_groups in names(pval_cache)) {
+    for (model in c("model1", "model2", "model3")) {
+        pvals <- pval_cache[[n_groups]][[model]]
+        if (!is.null(pvals)) {
+            power_vals <- colMeans(pvals < 0.05, na.rm = TRUE)
+            power_df <- rbind(
+                power_df,
+                data.frame(
+                    SampleSize = as.numeric(n_groups),
+                    Model = switch(model,
+                                   model1 = "Principal Trust",
+                                   model2 = "Riskier Action",
+                                   model3 = "Punishment"),
+                    Treatment = "LLM-delegation",
+                    Power = power_vals[1]
+                ),
+                data.frame(
+                    SampleSize = as.numeric(n_groups),
+                    Model = switch(model,
+                                   model1 = "Principal Trust",
+                                   model2 = "Riskier Action",
+                                   model3 = "Punishment"),
+                    Treatment = "LLM-advice",
+                    Power = power_vals[2]
+                )
+            )
+        }
+    }
+}
+
+
+# Prepare summary table: average power by sample size, model, and treatment
+power_table <- dcast(
+    power_df,
+    SampleSize + Model ~ Treatment,
+    value.var = "Power"
+)
+# Add Greek letters and subscripts to clarify which parameter each power value refers to
+# LLM-delegation: β₁ (Principal Trust), γ₁ (Riskier Action), α₁ (Punishment)
+# LLM-advice: β₂ (Principal Trust), γ₂ (Riskier Action), α₂ (Punishment)
+
+# Create new column names with Greek letters and subscripts
+
+colnames(power_table) <- c(
+    "Sample Size",
+    "Model",
+    "$\\beta_1$, $\\gamma_1$, $\\alpha_1$ (LLM-delegation)",
+    "$\\beta_2$, $\\gamma_2$, $\\alpha_2$ (LLM-advice)"
+)
+
+# Collapse repeated Sample Size values for display
+power_table_display <- power_table
+power_table_display$`Sample Size` <- ifelse(
+    duplicated(power_table_display$`Sample Size`), "", power_table_display$`Sample Size`
+)
+
+knitr::kable(
+    power_table_display,
+    format = "latex",
+    caption = "Estimated Power for Hypothesis Tests of Treatment Effects: $\\beta_1$, $\\beta_2$ (Principal Trust); $\\gamma_1$, $\\gamma_2$ (Riskier Action); $\\alpha_1$, $\\alpha_2$ (Punishment)",
+    digits = 2,
+    booktabs = TRUE,
+    row.names = FALSE,
+    escape = FALSE
+) %>%
+  kableExtra::kable_styling(
+    latex_options = c("hold_position"),
+    position = "center",
+    latex_table_env = "tabular",
+    font_size = 10,
+    full_width = FALSE
+  ) %>%
+  kableExtra::row_spec(0:nrow(power_table_display), extra_latex_after = "[1.5ex]")
+
+```
