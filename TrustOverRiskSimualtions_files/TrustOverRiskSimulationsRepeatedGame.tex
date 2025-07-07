@@ -96,7 +96,9 @@ trust, agent risk-taking, and punishment behavior. The simulation models
 a scenario where, in each round, a principal decides whether to trust an
 agent, and the agent then chooses between a safe action (``keep'') and a
 risky action (``Gamble A''). The probabilities of these actions, as well
-as the expected punishment, are parameterized by treatment.
+as the expected punishment, are parameterized by treatment. This
+document concerns only the main hypotheses without the mediators, check
+the rmd file to see the code and the simulation setup.
 
 The simulation is based on several key assumptions regarding the
 distributions of actions and the expected effect sizes. For the
@@ -117,7 +119,7 @@ LLM-delegation, 0.8 for LLM-advice, and 0.5 for
   model:
 
   \[
-  \text{logit}(\Pr(\text{Trust}_{ij} = 1)) = \beta_0 + \beta_1 \cdot \text{LLM-delegation}_{ij} + \beta_2 \cdot \text{LLM-advice}_{ij} + u_j
+  Trust_{ij} = 1 = \beta_0 + \beta_1 \cdot \text{LLM-delegation}_{ij} + \beta_2 \cdot \text{LLM-advice}_{ij} + u_j
   \] where \(u_j\) is a random intercept for each principal.
 \item
   \textbf{Agent Riskier Action}: The likelihood that the agent chooses
@@ -141,6 +143,33 @@ The simulation iterates over multiple sample sizes and repetitions to
 estimate the statistical power for detecting treatment effects in each
 model. The results are summarized in regression tables and power curves,
 providing guidance for experimental design and sample size planning.
+
+Participants are rematched in groups of 2, with each group playing 3
+rounds of the trust over risk game. We made the following assumptions
+about the estimated effect sizes of the experimnt:
+
+Below are the key simulation parameters for each treatment group. The
+table summarizes the assumed probabilities and means (\(p\), \(\mu\)),
+as well as standard deviations (\(\sigma\)) for trust, agent actions,
+and punishment.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lccc}
+\toprule
+ & \textbf{LLM-delegation} & \textbf{LLM-advice} & \textbf{Control} \\
+\midrule
+Principal trust probability ($p_\text{trust}$) & 0.8 & 0.6 & 0.5 \\
+Mean trust sent ($\mu_\text{trust}$) & 6 & 6 & 5 \\
+SD trust sent ($\sigma_\text{trust}$) & 3.2 & 3.2 & 3.2 \\
+Agent "keep" probability ($p_\text{keep}$) & 0.05 & 0.05 & 0.05 \\
+Agent "Gamble A" probability ($p_\text{GambleA}$) & 1.0 & 0.8 & 0.5 \\
+Mean punishment ($\mu_\text{punish}$) & 0 & 0 & 2 \\
+SD punishment ($\sigma_\text{punish}$) & 2 & 2 & 2 \\
+\bottomrule
+\end{tabular}
+\caption{Simulation parameters for each treatment group: probabilities ($p$), means ($\mu$), and standard deviations ($\sigma$).}
+\end{table}
 
 \begin{table}[!htbp] \centering 
   \caption{Mixed Effects Regression Results} 

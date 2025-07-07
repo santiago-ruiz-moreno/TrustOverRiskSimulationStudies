@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.4) (preloaded format=xelatex 2025.6.16)  7 JUL 2025 17:05
+This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.4) (preloaded format=xelatex 2025.6.16)  7 JUL 2025 17:13
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1264,29 +1264,30 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 119.
+(Font)              scaled to size 7.0pt on input line 121.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(1)/m/n' will be
-(Font)              scaled to size 5.0pt on input line 119.
+(Font)              scaled to size 5.0pt on input line 121.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 10.00092pt on input line 119.
+(Font)              scaled to size 10.00092pt on input line 121.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 7.00064pt on input line 119.
+(Font)              scaled to size 7.00064pt on input line 121.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(2)/m/n' will be
-(Font)              scaled to size 5.00046pt on input line 119.
+(Font)              scaled to size 5.00046pt on input line 121.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 9.99893pt on input line 119.
+(Font)              scaled to size 9.99893pt on input line 121.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 6.99925pt on input line 119.
+(Font)              scaled to size 6.99925pt on input line 121.
 LaTeX Font Info:    Font shape `TU/latinmodern-math.otf(3)/m/n' will be
-(Font)              scaled to size 4.99947pt on input line 119.
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
+(Font)              scaled to size 4.99947pt on input line 121.
 
 
 [1
 
 ]
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
 
 [2]
 
@@ -1299,10 +1300,10 @@ L3 programming layer <2025-05-26>
 Here is how much of TeX's memory you used:
  20144 strings out of 403341
  360389 string characters out of 5462500
- 965111 words of memory out of 5000000
+ 957111 words of memory out of 5000000
  48236 multiletter control sequences out of 15000+600000
  633350 words of font info for 90 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 90i,11n,114p,1035b,386s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,13n,114p,1035b,386s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on TrustOverRiskSimulationsRepeatedGame.pdf (3 pages).
