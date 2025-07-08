@@ -82,7 +82,7 @@
 
 \title{Simulations of Trust Game}
 \author{J. Santiago Ruiz M}
-\date{2025-07-07}
+\date{2025-07-08}
 
 \begin{document}
 \maketitle
@@ -92,9 +92,9 @@ Interventions}\label{simulations-of-trust-over-risk-game-with-llm-interventions}
 
 This document presents a simulation study of a repeated trust game,
 designed to evaluate the effects of different
-treatments---LLM-delegation, LLM-advice, and control---on principal
-trust, agent risk-taking, and punishment behavior. The simulation models
-a scenario where, in each round, a principal decides whether to trust an
+treatments---LLMdelegation, LLMadvice, and control---on principal trust,
+agent risk-taking, and punishment behavior. The simulation models a
+scenario where, in each round, a principal decides whether to trust an
 agent, and the agent then chooses between a safe action (``keep'') and a
 risky action (``Gamble A''). The probabilities of these actions, as well
 as the expected punishment, are parameterized by treatment. This
@@ -102,15 +102,10 @@ document concerns only the main hypotheses without the mediators, check
 the rmd file to see the code and the simulation setup.
 
 The simulation is based on several key assumptions regarding the
-distributions of actions and the expected effect sizes. For the
-principal's decision to trust, the probability is set to 0.8 in the
-LLM-delegation treatment, 0.6 in the LLM-advice treatment, and 0.5 in
-the control group. These probabilities are chosen to reflect anticipated
-increases in trust due to the LLM interventions, corresponding to
-moderate to large effect sizes (approximately 10\% increase for advice
-and 30\% for delegation compared to control). For the agent's choice,
-the probability of selecting the riskier ``Gamble A'' is set to 1.0 for
-LLM-delegation, 0.8 for LLM-advice, and 0.5 for
+distributions of actions and the expected effect sizes as described in
+Table 1. For instance, we anticipate for the agent's choice, the
+probability of selecting the riskier ``Gamble A'' to be 1.0 for
+LLMdelegation, 0.8 for LLMadvice, and 0.5 for the baseline.
 
 \begin{itemize}
 \item
@@ -120,7 +115,7 @@ LLM-delegation, 0.8 for LLM-advice, and 0.5 for
   model:
 
   \[
-  Trust_{ij} = 1 = \beta_0 + \beta_1 \cdot \text{LLM-delegation}_{ij} + \beta_2 \cdot \text{LLM-advice}_{ij} + u_j
+  Trust_{ij} = \beta_0 + \beta_1 \cdot \text{LLMdelegation}_{ij} + \beta_2 \cdot \text{LLMadvice}_{ij} + u_j
   \] where \(u_j\) is a random intercept for each principal.
 \item
   \textbf{Agent Riskier Action}: The likelihood that the agent chooses
@@ -128,14 +123,14 @@ LLM-delegation, 0.8 for LLM-advice, and 0.5 for
   treatment, using a logistic mixed effects model:
 
   \[
-  \text{logit}(\Pr(\text{GambleA}_{ij} = 1)) = \gamma_0 + \gamma_1 \cdot \text{LLM-delegation}_{ij} + \gamma_2 \cdot \text{LLM-advice}_{ij} + v_j
+  \text{logit}(\Pr(\text{GambleA}_{ij} = 1)) = \gamma_0 + \gamma_1 \cdot \text{LLMdelegation}_{ij} + \gamma_2 \cdot \text{LLMadvice}_{ij} + v_j
   \] where \(v_j\) is a random intercept for each agent.
 \item
   \textbf{Punishment}: The amount of punishment assigned by the
   principal is modeled with a linear mixed effects model:
 
   \[
-  \text{Punishment}_{ij} = \alpha_0 + \alpha_1 \cdot \text{LLM-delegation}_{ij} + \alpha_2 \cdot \text{LLM-advice}_{ij} + w_j + \epsilon_{ij}
+  \text{Punishment}_{ij} = \alpha_0 + \alpha_1 \cdot \text{LLMdelegation}_{ij} + \alpha_2 \cdot \text{LLMadvice}_{ij} + w_j + \epsilon_{ij}
   \] where \(w_j\) is a random intercept for each agent and
   \(\epsilon_{ij}\) is the residual error.
 \end{itemize}
@@ -158,7 +153,7 @@ and punishment.
 \centering
 \begin{tabular}{lccc}
 \toprule
- & \textbf{LLM-delegation} & \textbf{LLM-advice} & \textbf{Control} \\
+ & \textbf{LLMdelegation} & \textbf{LLMadvice} & \textbf{Control} \\
 \midrule
 Principal trust probability ($p_\text{trust}$) & 0.8 & 0.6 & 0.5 \\
 Mean trust sent ($\mu_\text{trust}$) & 6 & 6 & 5 \\
@@ -185,9 +180,9 @@ SD punishment ($\sigma_\text{punish}$) & 2 & 2 & 2 \\
  & \textit{mixed-effects} & \textit{mixed-effects} & \textit{mixed-effects} \\ 
  & Principal Trust & Riskier Action & Punishment \\ 
 \hline \\[-1.8ex] 
- LLM-delegation & 0.626 & 3.706$^{***}$ & $-$0.939$^{***}$ \\ 
+ LLMdelegation & 0.626 & 3.706$^{***}$ & $-$0.939$^{***}$ \\ 
   & & & \\ 
- LLM-advice & 0.630 & 1.517$^{***}$ & $-$0.878$^{***}$ \\ 
+ LLMadvice & 0.630 & 1.517$^{***}$ & $-$0.878$^{***}$ \\ 
   & & & \\ 
  Constant & 5.235$^{***}$ & $-$0.272 & 0.819$^{***}$ \\ 
   & & & \\ 
@@ -215,7 +210,7 @@ Skipping simulation and using cached results.
 \fontsize{10}{12}\selectfont
 \begin{tabular}{llrr}
 \toprule
-Sample Size & Model & $\beta_1$, $\gamma_1$, $\alpha_1$ (LLM-delegation) & $\beta_2$, $\gamma_2$, $\alpha_2$ (LLM-advice)\\
+Sample Size & Model & $\beta_1$, $\gamma_1$, $\alpha_1$ (LLMdelegation) & $\beta_2$, $\gamma_2$, $\alpha_2$ (LLMadvice)\\
 [1.5ex]
 \midrule
 90 & Principal Trust & 0.52 & 0.54\\

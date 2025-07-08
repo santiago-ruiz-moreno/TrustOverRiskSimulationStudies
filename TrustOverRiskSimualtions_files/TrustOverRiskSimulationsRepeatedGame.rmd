@@ -16,29 +16,40 @@ header-includes:
 
 # Simulations of Trust over Risk Game with LLM Interventions
 
-This document presents a simulation study of a repeated trust game, designed to evaluate the effects of different treatments—LLM-delegation, LLM-advice, and control—on principal trust, agent risk-taking, and punishment behavior. The simulation models a scenario where, in each round, a principal decides whether to trust an agent, and the agent then chooses between a safe action ("keep") and a risky action ("Gamble A"). The probabilities of these actions, as well as the expected punishment, are parameterized by treatment.
-This document concerns only the main hypotheses without the mediators, check the rmd file to see the code and the simulation setup.
+This document presents a simulation study of a repeated trust game, designed to
+evaluate the effects of different treatments—LLMdelegation, LLMadvice, and
+control—on principal trust, agent risk-taking, and punishment behavior. The
+simulation models a scenario where, in each round, a principal decides whether
+to trust an agent, and the agent then chooses between a safe action ("keep") and
+a risky action ("Gamble A"). The probabilities of these actions, as well as the
+expected punishment, are parameterized by treatment. This document concerns only
+the main hypotheses without the mediators, check the rmd file to see the code
+and the simulation setup.
 
-The simulation is based on several key assumptions regarding the distributions of actions and the expected effect sizes. For the principal's decision to trust, the probability is set to 0.8 in the LLM-delegation treatment, 0.6 in the LLM-advice treatment, and 0.5 in the control group. These probabilities are chosen to reflect anticipated increases in trust due to the LLM interventions, corresponding to moderate to large effect sizes (approximately 10% increase for advice and 30% for delegation compared to control). For the agent's choice, the probability of selecting the riskier "Gamble A" is set to 1.0 for LLM-delegation, 0.8 for LLM-advice, and 0.5 for
+The simulation is based on several key assumptions regarding the distributions
+of actions and the expected effect sizes as described in Table 1.
+For instance, we anticipate for the agent's choice, the
+probability of selecting the riskier "Gamble A" to be 1.0 for LLMdelegation,
+0.8 for LLMadvice, and 0.5 for the baseline.
 
 - **Principal Trust**: The probability that a principal chooses to trust the agent is modeled as a function of the agent's treatment. Formally, the hypothesis is tested using a logistic mixed effects model:
   
   $$
-  Trust_{ij} = 1 = \beta_0 + \beta_1 \cdot \text{LLM-delegation}_{ij} + \beta_2 \cdot \text{LLM-advice}_{ij} + u_j
+  Trust_{ij} = \beta_0 + \beta_1 \cdot \text{LLMdelegation}_{ij} + \beta_2 \cdot \text{LLMadvice}_{ij} + u_j
   $$
   where $u_j$ is a random intercept for each principal.
 
 - **Agent Riskier Action**: The likelihood that the agent chooses the riskier action ("Gamble A") is also modeled as a function of treatment, using a logistic mixed effects model:
   
   $$
-  \text{logit}(\Pr(\text{GambleA}_{ij} = 1)) = \gamma_0 + \gamma_1 \cdot \text{LLM-delegation}_{ij} + \gamma_2 \cdot \text{LLM-advice}_{ij} + v_j
+  \text{logit}(\Pr(\text{GambleA}_{ij} = 1)) = \gamma_0 + \gamma_1 \cdot \text{LLMdelegation}_{ij} + \gamma_2 \cdot \text{LLMadvice}_{ij} + v_j
   $$
   where $v_j$ is a random intercept for each agent.
 
 - **Punishment**: The amount of punishment assigned by the principal is modeled with a linear mixed effects model:
   
   $$
-  \text{Punishment}_{ij} = \alpha_0 + \alpha_1 \cdot \text{LLM-delegation}_{ij} + \alpha_2 \cdot \text{LLM-advice}_{ij} + w_j + \epsilon_{ij}
+  \text{Punishment}_{ij} = \alpha_0 + \alpha_1 \cdot \text{LLMdelegation}_{ij} + \alpha_2 \cdot \text{LLMadvice}_{ij} + w_j + \epsilon_{ij}
   $$
   where $w_j$ is a random intercept for each agent and $\epsilon_{ij}$ is the residual error.
 
@@ -54,7 +65,7 @@ Below are the key simulation parameters for each treatment group. The table summ
 \centering
 \begin{tabular}{lccc}
 \toprule
- & \textbf{LLM-delegation} & \textbf{LLM-advice} & \textbf{Control} \\
+ & \textbf{LLMdelegation} & \textbf{LLMadvice} & \textbf{Control} \\
 \midrule
 Principal trust probability ($p_\text{trust}$) & 0.8 & 0.6 & 0.5 \\
 Mean trust sent ($\mu_\text{trust}$) & 6 & 6 & 5 \\
@@ -80,7 +91,7 @@ number_of_groups = 150
 rounds = 3
 players_per_group = 2
 total_players = number_of_groups*2
-treatments <- c("LLM-delegation", "LLM-advice", "control")
+treatments <- c("LLMdelegation", "LLMadvice", "control")
 
 # Define probabilities and payoffs for the gambles
 gamble_probs <- list(
@@ -100,20 +111,20 @@ gamble_payoffs <- list(
 # smaller than 2.5 (Cohen's d = 0.7)
 # Define trust probabilities for each treatment (probability principal gives >1 token)
 trust_probs <- c(
-    "LLM-delegation" = 0.8,
-    "LLM-advice" = 0.6,
+    "LLMdelegation" = 0.8,
+    "LLMadvice" = 0.6,
     "control" = 0.5
 )
 
 trust_means <- c(
-    "LLM-delegation" = 6,
-    "LLM-advice" = 6,
+    "LLMdelegation" = 6,
+    "LLMadvice" = 6,
     "control" = 5
 )
 
 trust_sds <- c(
-    "LLM-delegation" = 3.2,
-    "LLM-advice" = 3.2,
+    "LLMdelegation" = 3.2,
+    "LLMadvice" = 3.2,
     "control" = 3.2
 )
 
@@ -122,20 +133,20 @@ prob_keep <- 0.05
 
 # Probability agent chooses "Gamble A" (from gambleA_probs), "Gamble B" gets the remainder
 gambleA_probs <- c(
-    "LLM-delegation" = 1,
-    "LLM-advice" = 0.8,
+    "LLMdelegation" = 1,
+    "LLMadvice" = 0.8,
     "control" = 0.5
 )
 
 punishment_means <- c(
-    "LLM-delegation" = 0,
-    "LLM-advice" = 0,
+    "LLMdelegation" = 0,
+    "LLMadvice" = 0,
     "control" = 2
 )
 
 punishment_sds <- c(
-    "LLM-delegation" = 2,
-    "LLM-advice" = 2,
+    "LLMdelegation" = 2,
+    "LLMadvice" = 2,
     "control" = 2
 )
 
@@ -287,7 +298,7 @@ library(stargazer)
 
 # Runing regressions for main hypotheses
 
-# Hypothesis 1: Principals trust more participants who are either in the LLM-advice or in the LLM-delegation treatment
+# Hypothesis 1: Principals trust more participants who are either in the LLMadvice or in the LLMdelegation treatment
 # Mixed effects regression model with participant as random effect
 
 run_regressions <- function(results, treatments) {
@@ -333,7 +344,7 @@ stargazer(
   type = "latex",
   title = "Mixed Effects Regression Results",
   dep.var.labels = c("Principal Trust (logit)", "Riskier Action by Agent (logit)", "Punishment (linear)"),
-  covariate.labels = c("LLM-delegation", "LLM-advice"),
+  covariate.labels = c("LLMdelegation", "LLMadvice"),
   column.labels = c("Principal Trust", "Riskier Action", "Punishment"),
   model.numbers = FALSE,
   single.row = FALSE,
@@ -354,7 +365,7 @@ library(pbapply)
 # Helper to extract p-values from glmer model
 extract_pvals <- function(model) {
     coefs <- summary(model)$coefficients
-    # For agent_treatmentLLM-delegation and agent_treatmentLLM-advice
+    # For agent_treatmentLLMdelegation and agent_treatmentLLMadvice
     if ("Pr(>|z|)" %in% colnames(coefs)) {
         # For binomial models (glmer)
         pvals <- coefs[grepl("agent_treatment", rownames(coefs)), "Pr(>|z|)", drop=FALSE]
@@ -445,7 +456,7 @@ for (n_groups in names(pval_cache)) {
                                    model1 = "Principal Trust",
                                    model2 = "Riskier Action",
                                    model3 = "Punishment"),
-                    Treatment = "LLM-delegation",
+                    Treatment = "LLMdelegation",
                     Power = power_vals[1]
                 ),
                 data.frame(
@@ -454,7 +465,7 @@ for (n_groups in names(pval_cache)) {
                                    model1 = "Principal Trust",
                                    model2 = "Riskier Action",
                                    model3 = "Punishment"),
-                    Treatment = "LLM-advice",
+                    Treatment = "LLMadvice",
                     Power = power_vals[2]
                 )
             )
@@ -470,16 +481,16 @@ power_table <- dcast(
     value.var = "Power"
 )
 # Add Greek letters and subscripts to clarify which parameter each power value refers to
-# LLM-delegation: β₁ (Principal Trust), γ₁ (Riskier Action), α₁ (Punishment)
-# LLM-advice: β₂ (Principal Trust), γ₂ (Riskier Action), α₂ (Punishment)
+# LLMdelegation: β₁ (Principal Trust), γ₁ (Riskier Action), α₁ (Punishment)
+# LLMadvice: β₂ (Principal Trust), γ₂ (Riskier Action), α₂ (Punishment)
 
 # Create new column names with Greek letters and subscripts
 
 colnames(power_table) <- c(
     "Sample Size",
     "Model",
-    "$\\beta_1$, $\\gamma_1$, $\\alpha_1$ (LLM-delegation)",
-    "$\\beta_2$, $\\gamma_2$, $\\alpha_2$ (LLM-advice)"
+    "$\\beta_1$, $\\gamma_1$, $\\alpha_1$ (LLMdelegation)",
+    "$\\beta_2$, $\\gamma_2$, $\\alpha_2$ (LLMadvice)"
 )
 
 # Collapse repeated Sample Size values for display
