@@ -53,13 +53,13 @@ probability of selecting the riskier "Gamble A" to be 1.0 for LLMdelegation,
   $$
   where $w_j$ is a random intercept for each agent and $\epsilon_{ij}$ is the residual error.
 
-The simulation iterates over multiple sample sizes and repetitions to estimate the statistical power for detecting treatment effects in each model.
- The results are summarized in regression tables and power curves, providing guidance for experimental design and sample size planning.
+The simulation iterates over multiple sample sizes and repetitions to estimate the statistical power for detecting treatment effects in each model.  
+The results are summarized in regression tables, providing guidance for experimental design and sample size planning.
 
-Participants are rematched in groups of 2, with each group playing 3 rounds of the trust over risk game. We made the following assumptions
-about the estimated effect sizes of the experimnt:
+Participants are rematched in groups of 2, with each group playing 3 rounds of the trust over risk game. We made the following assumptions about the estimated effect sizes of the experiment:
 
 Below are the key simulation parameters for each treatment group. The table summarizes the assumed probabilities and means ($p$, $\mu$), as well as standard deviations ($\sigma$) for trust, agent actions, and punishment.
+
 
 \begin{table}[ht]
 \centering
